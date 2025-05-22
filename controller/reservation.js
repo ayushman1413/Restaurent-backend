@@ -7,8 +7,8 @@ export const sendReservation = async (req, res, next) => {
         return next(new ErrorHandler("Please fill all the fields", 400));
     }
     try{
-        await Reservation.create(  firstName, lastName, email,  phone,  date, time);
-        res.status(200),json({
+        await Reservation.create({ firstName, lastName, email, phone, date, time });
+        res.status(200).json({
             success: true,
             message: "Reservation sent successfully",
          });
@@ -18,7 +18,8 @@ export const sendReservation = async (req, res, next) => {
           if(error.name === "ValidationError"){
            const validationError = Object.values(error.errors).map((err) => err.message
         );
-        return next(new ErrorHandler(validationError.json(" ,"), 400));
+        return next(new ErrorHandler(validationError.join(" , "), 400));
           }
+          return next(error);
         }
 };
